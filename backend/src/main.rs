@@ -1,4 +1,5 @@
 
+use actix_cors::Cors;
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
 use dotenvy::dotenv;
 use serde::{Deserialize, Serialize};
@@ -50,12 +51,12 @@ async fn get_repo_contents(query: web::Query<RepoQuery>) -> impl Responder {
             .body(format!("Request error: {}", err));
     }
 
-    let response = res.unwrap().text().await;
+    // let response = res.unwrap().text().await;
     
-    // let response = res.unwrap().json::<serde_json::Value>().await;
+    let response = res.unwrap().json::<serde_json::Value>().await;
 
     match response {
-        Ok(json) => HttpResponse::Ok().json(serde_json::json!(json)),
+        Ok(json) => HttpResponse::Ok().json(json),
         Err(err) => HttpResponse::InternalServerError()
             .body(format!("Failed to parse GitHub response: {}", err)),
     }
@@ -63,7 +64,13 @@ async fn get_repo_contents(query: web::Query<RepoQuery>) -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| App::new().service(get_repo_contents))
+    HttpServer::new(|| App::new().wrap(
+                Cors::default()
+                    .allow_any_origin()
+                    .allowed_methods(vec!["GET", "POST"]) 
+                    .allowed_headers(vec!["Content-Type"])
+                    .max_age(3600), // プリフライトリクエストのキャッシュ時間を設定
+            ).service(get_repo_contents))
         .bind(("127.0.0.1", 8080))?
         .run()
         .await
