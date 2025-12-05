@@ -1,5 +1,2 @@
 .env
 test.json
-# Added by cargo
-
-backend/target
