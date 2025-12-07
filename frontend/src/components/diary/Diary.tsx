@@ -17,10 +17,6 @@ export const Diary = () => {
   fetchData()
   },[])
 
-  // const github_content = await getGithubContent();
-
-  // const grouped_data = buildDiaryData(github_content);
-  // console.log("ikkaidiinoni ")
   console.log(groupedData);
   return (
     <div className="p-4 space-y-4">

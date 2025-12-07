@@ -1,0 +1,38 @@
+.month {
+  margin-bottom: 32px;
+}
+
+.monthTitle {
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.weekday {
+  text-align: center;
+  font-weight: bold;
+}
+
+.dayCell {
+  text-align: center;
+  padding: 6px 0;
+  border-radius: 4px;
+}
+
+.sunday {
+  color: #ef9a9a;
+}
+
+.saturday {
+  color: #90caf9;
+}
+
+.today {
+  background-color: #fff6fd;
+}
