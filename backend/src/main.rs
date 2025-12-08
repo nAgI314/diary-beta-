@@ -1,77 +1,41 @@
-
 use actix_cors::Cors;
-use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
-use dotenvy::dotenv;
-use serde::{Deserialize, Serialize};
-use reqwest;
+use actix_web::{App, HttpServer, web, http};
+use std::collections::HashMap;
 
-#[derive(Deserialize)]
-struct RepoQuery {
-    owner: String,
-    repo: String,
-    path: Option<String>,
-}
+use crate::method::get_repo::get_repo_contents;
+pub mod method;
+mod auth;
+mod session;
 
-#[derive(Serialize, Deserialize)]
-struct GitHubItem {
-    name: String,
-    path: String,
-    sha: String,
-    #[serde(rename = "type")]
-    kind: String,
-    download_url: Option<String>,
-}
-
-#[get("/repo")]
-async fn get_repo_contents(query: web::Query<RepoQuery>) -> impl Responder {
-    let owner = &query.owner;
-    let repo = &query.repo;
-    let path = query.path.clone().unwrap_or_else(|| "".to_string());
-
-    dotenv().ok();
-    
-    let github_token = std::env::var("GITHUB_TOKEN")
-        .expect("GITHUB_TOKEN must be set");
-
-    let url = format!(
-        "https://api.github.com/repos/{}/{}/contents/{}/",
-        owner, repo, path
-    );
-
-    let client = reqwest::Client::new();
-    let res = client
-        .get(url)
-        .header("User-Agent", "Actix-Web")
-        .bearer_auth(github_token)
-        .send()
-        .await;
-
-    if let Err(err) = res {
-        return HttpResponse::InternalServerError()
-            .body(format!("Request error: {}", err));
-    }
-
-    // let response = res.unwrap().text().await;
-    
-    let response = res.unwrap().json::<serde_json::Value>().await;
-
-    match response {
-        Ok(json) => HttpResponse::Ok().json(json),
-        Err(err) => HttpResponse::InternalServerError()
-            .body(format!("Failed to parse GitHub response: {}", err)),
-    }
-}
+use auth::{github_login::login, github_callback::callback};
+use session::SessionStore;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| App::new().wrap(
+    let session_store = web::Data::new(SessionStore::new(HashMap::new()));
+
+    HttpServer::new(move || {
+        App::new()
+            .app_data(session_store.clone())
+            .wrap(
                 Cors::default()
-                    .allow_any_origin()
-                    .allowed_methods(vec!["GET", "POST"]) 
-                    .allowed_headers(vec!["Content-Type"])
-                    .max_age(3600), // プリフライトリクエストのキャッシュ時間を設定
-            ).service(get_repo_contents))
-        .bind(("127.0.0.1", 8080))?
-        .run()
-        .await
+                    // 本番環境では具体的なオリジンを指定する
+                    .allowed_origin("http://localhost:5173")  
+                    .allowed_methods(vec!["GET", "POST", "OPTIONS"])
+                    .allowed_headers(vec![
+                        http::header::CONTENT_TYPE,
+                        http::header::AUTHORIZATION,  
+                        http::header::ACCEPT,         
+                        http::header::COOKIE,         
+                    ])
+                    .supports_credentials()  
+                    .max_age(3600),
+            )
+            .service(get_repo_contents)
+            .service(login)
+            .service(callback)
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
 }

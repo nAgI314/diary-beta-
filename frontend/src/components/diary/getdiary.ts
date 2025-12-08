@@ -17,17 +17,17 @@ export interface GithubContentItem {
 
 export type GithubContentsResponse = GithubContentItem[];
 
-export const getGithubContent = async ():Promise<GithubContentsResponse> => {
+export const getGithubContent = async (): Promise<GithubContentsResponse> => {
   const alldata = await getAllFilesRecursive("primary");
   // console.log(alldata);
-  return alldata
+  return alldata;
 };
 
 const getAllFilesRecursive = async (
   path: string
 ): Promise<GithubContentItem[]> => {
   const items = await getGithubDirectory(path);
-//   console.log(items);
+  //   console.log(items);
   const files: GithubContentItem[] = [];
 
   for (const item of items) {
@@ -47,7 +47,10 @@ const getGithubDirectory = async (
   path: string
 ): Promise<GithubContentsResponse> => {
   const response = await fetch(
-    `http://localhost:8080/repo?owner=nAgI314&repo=diary&path=${path}`
+    `http://localhost:8080/repo?owner=nAgI314&repo=diary&path=${path}`,
+    {
+      credentials: "include", // cookieを入れる設定
+    }
   );
 
   if (!response.ok) {

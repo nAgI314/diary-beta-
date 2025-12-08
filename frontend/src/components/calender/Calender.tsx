@@ -36,8 +36,19 @@ export const Calender = () => {
   console.log(groupedData?.[2025]?.[12]);
   const allDate = getDatesOfYear(2025);
   const MONTHS = Array.from({ length: 12 }, (_, i) => i);
+
+  const handleUpdateData = async () => {
+    const raw = await getGithubContent();
+    const grouped = buildDiaryData(raw);
+    setGroupedData(grouped);
+  };
   if (!groupedData) {
-    return <div>loading...</div>;
+    return (
+      <div>
+        <div>loading...</div>
+        <button onClick={handleUpdateData}>読み込み</button>
+      </div>
+    );
   }
   return (
     <div>
