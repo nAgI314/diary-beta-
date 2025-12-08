@@ -15,7 +15,7 @@ export const Month = (props: MonthProps) => {
     (date) => date.getMonth() === props.month
   );
 
-  console.log("Month", props.month, props.diaryMonthData);
+  // console.log("Month", props.month, props.diaryMonthData);
 
   // 月初の曜日（日=0）
   const startDay = getDay(monthData[0]);
@@ -23,7 +23,7 @@ export const Month = (props: MonthProps) => {
   // 空白マスを作る
   const blanks = Array.from({ length: startDay });
   return (
-    <div className={styles.month}>
+    <div className={styles.month} id={`month-${props.month}`}>
       {/* 月名 */}
       {/* <h3 className={styles.monthTitle}>{props.month + 1}月</h3> */}
       <h3 className={styles.monthTitle}>

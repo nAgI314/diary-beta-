@@ -16,9 +16,24 @@ export const Calender = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (!groupedData) return; // データがない場合は何もしない
+
+    // DOMの描画完了を待つ
+    setTimeout(() => {
+      const today = new Date();
+      const month = today.getMonth(); // 0–11
+      const targetElement = document.getElementById(`month-${month}`);
+
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 100);
+  }, [groupedData]);
+
   console.log(groupedData);
 
-  console.log(groupedData?.[2025]?.[12])
+  console.log(groupedData?.[2025]?.[12]);
   const allDate = getDatesOfYear(2025);
   const MONTHS = Array.from({ length: 12 }, (_, i) => i);
   if (!groupedData) {
@@ -30,7 +45,7 @@ export const Calender = () => {
         <Month
           allDate={allDate}
           month={i}
-          diaryMonthData={groupedData?.[2025]?.[i+1]}
+          diaryMonthData={groupedData?.[2025]?.[i + 1]}
         />
       ))}
       {/* {groupedData &&
