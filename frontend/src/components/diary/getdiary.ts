@@ -19,7 +19,7 @@ export type GithubContentsResponse = GithubContentItem[];
 
 export const getGithubContent = async ():Promise<GithubContentsResponse> => {
   const alldata = await getAllFilesRecursive("primary");
-  console.log(alldata);
+  // console.log(alldata);
   return alldata
 };
 

@@ -1,8 +1,23 @@
 .day {
   /* background-color: beige; */
   font-size: 18px;
+  font-family: "collectsans-Regular", sans-serif;
+  /* background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px; */
   /* width: 50px; */
   /* height: 40px; */
   /* border: 2px; */
   /* border-color: bisque; */
+}
+
+.diary_day {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  font-size: 18px;
+  font-family: "collectsans-Regular", sans-serif;
+}
+
+.today {
+  background-color: rgba(255, 255,255, 0.5);
 }

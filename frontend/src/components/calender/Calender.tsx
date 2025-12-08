@@ -1,28 +1,38 @@
-// import { useEffect, useState } from "react";
-// import { buildDiaryData, type DiaryData } from "../grouping";
-// import { getGithubContent } from "../diary/getdiary";
+import { useEffect, useState } from "react";
+import { buildDiaryData, type DiaryData } from "../grouping";
+import { getGithubContent } from "../diary/getdiary";
 import { getDatesOfYear } from "./getAllDate";
 import { Month } from "../month/Month";
 
 export const Calender = () => {
-//   const [groupedData, setGroupedData] = useState<DiaryData>();
+  const [groupedData, setGroupedData] = useState<DiaryData>();
 
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       const raw = await getGithubContent();
-//       const grouped = buildDiaryData(raw);
-//       setGroupedData(grouped);
-//     };
-//     fetchData();
-//   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      const raw = await getGithubContent();
+      const grouped = buildDiaryData(raw);
+      setGroupedData(grouped);
+    };
+    fetchData();
+  }, []);
 
-  const allDate = getDatesOfYear(2025); 
+  console.log(groupedData);
+
+  console.log(groupedData?.[2025]?.[12])
+  const allDate = getDatesOfYear(2025);
   const MONTHS = Array.from({ length: 12 }, (_, i) => i);
+  if (!groupedData) {
+    return <div>loading...</div>;
+  }
   return (
     <div>
-        {MONTHS.map((i) => 
-        <Month allDate={allDate} month={i}/>
-        )}
+      {MONTHS.map((i) => (
+        <Month
+          allDate={allDate}
+          month={i}
+          diaryMonthData={groupedData?.[2025]?.[i+1]}
+        />
+      ))}
       {/* {groupedData &&
         Object.entries(groupedData).map(([year, months]) => (
           <div>

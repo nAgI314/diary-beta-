@@ -1,12 +1,12 @@
 import type { GithubContentItem } from "./diary/getdiary";
 
-interface DiaryDay {
+export interface DiaryDay {
   date: string;  // "2025-12-04"
   markdown?: GithubContentItem;
   images: GithubContentItem[];
 }
 
-interface DiaryMonth {
+export interface DiaryMonth {
   [day: string]: DiaryDay;
 }
 

@@ -1,16 +1,21 @@
-import { getDay, isToday } from "date-fns";
+import { format, getDay, isToday } from "date-fns";
 import { Day } from "../day/Day";
 import styles from "./styles.module.css";
+import { enUS } from "date-fns/locale";
+import type { DiaryMonth } from "../grouping";
 
 interface MonthProps {
   allDate: Date[];
   month: number;
+  diaryMonthData?: DiaryMonth;
 }
 
 export const Month = (props: MonthProps) => {
   const monthData = props.allDate.filter(
     (date) => date.getMonth() === props.month
   );
+
+  console.log("Month", props.month, props.diaryMonthData);
 
   // 月初の曜日（日=0）
   const startDay = getDay(monthData[0]);
@@ -20,7 +25,10 @@ export const Month = (props: MonthProps) => {
   return (
     <div className={styles.month}>
       {/* 月名 */}
-      <h3 className={styles.monthTitle}>{props.month + 1}月</h3>
+      {/* <h3 className={styles.monthTitle}>{props.month + 1}月</h3> */}
+      <h3 className={styles.monthTitle}>
+        {format(monthData[0], "MMMM", { locale: enUS })}
+      </h3>
 
       <div className={styles.grid}>
         {/* 曜日ヘッダ */}
@@ -43,7 +51,10 @@ export const Month = (props: MonthProps) => {
         {/* 日付 */}
         {monthData.map((date) => {
           const dayOfWeek = getDay(date);
+          const date_num = date.getDate();
+          const dayKey = String(date_num).padStart(2, "0");
 
+          // console.log(dayKey, props.diaryMonthData?.[dayKey]);
           return (
             <div
               key={date.toISOString()}
@@ -51,10 +62,13 @@ export const Month = (props: MonthProps) => {
                 ${styles.dayCell}
                 ${dayOfWeek === 0 ? styles.sunday : ""}
                 ${dayOfWeek === 6 ? styles.saturday : ""}
-                ${isToday(date) ? styles.today : ""}
               `}
             >
-              <Day day={date.getDate()} />
+              <Day
+                day={date_num}
+                isToday = {isToday(date)}
+                diaryDayData={props.diaryMonthData?.[dayKey]}
+              />
             </div>
           );
         })}
