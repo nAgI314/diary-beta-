@@ -47,7 +47,7 @@ const getGithubDirectory = async (
   path: string
 ): Promise<GithubContentsResponse> => {
   const response = await fetch(
-    `hhttp://163.220.236.17/api/repo?owner=nAgI314&repo=diary&path=${path}`,
+    `http://163.220.236.17/api/repo?owner=nAgI314&repo=diary&path=${path}`,
     {
       credentials: "include", // cookieを入れる設定
     }
