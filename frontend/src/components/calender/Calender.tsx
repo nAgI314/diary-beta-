@@ -3,6 +3,7 @@ import { buildDiaryData, type DiaryData } from "../grouping";
 import { getGithubContent } from "../diary/getdiary";
 import { getDatesOfYear } from "./getAllDate";
 import { Month } from "../month/Month";
+import styles from "./styles.module.css";
 
 export const Calender = () => {
   const [groupedData, setGroupedData] = useState<DiaryData>();
@@ -63,13 +64,13 @@ export const Calender = () => {
   if (!groupedData) {
     return (
       <div>
-        <div>loading...</div>
+        <div className={styles.wrapper}>loading...</div>
         <button onClick={handleUpdateData}>読み込み</button>
       </div>
     );
   }
   return (
-    <div>
+    <div className={styles.wrapper}>
       {MONTHS.map((i) => (
         <Month
           allDate={allDate}

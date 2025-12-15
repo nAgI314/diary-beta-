@@ -1,14 +1,18 @@
 import './App.css'
 import { Calender } from './components/calender/Calender'
-import { LoginButton } from './login/Login'
+import { Header } from './components/header/Header'
+// import { LoginButton } from './login/Login'
 // import { Diary } from './components/diary/Diary'
 
 function App() {
 
   return (
     <>
-    <LoginButton/>
+    <Header />
+    {/* <LoginButton/> */}
+    <main>
     <Calender/>
+    </main>
       {/* <Diary/> */}
     </>
   )
