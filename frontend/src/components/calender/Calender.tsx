@@ -9,9 +9,17 @@ export const Calender = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const raw = await getGithubContent();
-      const grouped = buildDiaryData(raw);
-      setGroupedData(grouped);
+      if (import.meta.env.VITE_MODE === "test") {
+        const res = await fetch("/diary-beta-/mock.json");
+        if (!res.ok) throw new Error("mock fetch error");
+
+        const mockData: DiaryData = await res.json();
+        setGroupedData(mockData);
+      } else {
+        const raw = await getGithubContent();
+        const grouped = buildDiaryData(raw);
+        setGroupedData(grouped);
+      }
     };
     fetchData();
   }, []);
@@ -38,9 +46,19 @@ export const Calender = () => {
   const MONTHS = Array.from({ length: 12 }, (_, i) => i);
 
   const handleUpdateData = async () => {
-    const raw = await getGithubContent();
-    const grouped = buildDiaryData(raw);
-    setGroupedData(grouped);
+    // console.log(import.meta.env.VITE_MODE);
+    if (import.meta.env.VITE_MODE === "test") {
+      
+      const res = await fetch("/diary-beta-/mock.json");
+      if (!res.ok) throw new Error("mock fetch error");
+
+      const mockData: DiaryData = await res.json();
+      setGroupedData(mockData);
+    } else {
+      const raw = await getGithubContent();
+      const grouped = buildDiaryData(raw);
+      setGroupedData(grouped);
+    }
   };
   if (!groupedData) {
     return (
