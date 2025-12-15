@@ -63,8 +63,8 @@ export const Calender = () => {
   };
   if (!groupedData) {
     return (
-      <div>
-        <div className={styles.wrapper}>loading...</div>
+      <div className={styles.wrapper}>
+        <div>loading...</div>
         <button onClick={handleUpdateData}>読み込み</button>
       </div>
     );
