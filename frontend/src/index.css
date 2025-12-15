@@ -27,6 +27,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   font-family: "collectsans-Regular", sans-serif;
+  /* font-family: "collect sans Regular", sans-serif; */
 }
 
 
@@ -69,7 +70,8 @@ button:focus-visible {
 
 @font-face {
   font-family: "collectsans-Regular";
-  src: url("./assets/fonts/collectsans-Regular.otf") format("opentype");
+  /* src: url("./assets/fonts/collectsans-Regular.otf") format("opentype"); */
+  src: local("collect sans Regular");
   font-weight: normal;
   font-style: normal;
 }
