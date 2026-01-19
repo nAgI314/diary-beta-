@@ -40,10 +40,10 @@ export const Calender = () => {
     }, 100);
   }, [groupedData]);
 
-  console.log(groupedData);
+  // console.log(groupedData);
 
-  console.log(groupedData?.[2025]?.[12]);
-  const allDate = getDatesOfYear(2025);
+  // console.log(groupedData?.[2025]?.[12]);
+  const allDate = getDatesOfYear(2026);
   const MONTHS = Array.from({ length: 12 }, (_, i) => i);
 
   const handleUpdateData = async () => {
