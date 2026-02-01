@@ -76,6 +76,9 @@ export const getDiaryIndex = async (): Promise<DiaryIndex> => {
   if (!response.ok) {
     throw new Error("index fetch error");
   }
-
-  return response.json();
+  const data = await response.json();
+  const decoded = atob(data.content); 
+  const index: DiaryIndex = JSON.parse(decoded);
+  console.log(index);
+  return index;
 };
