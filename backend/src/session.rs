@@ -36,3 +36,15 @@ pub fn remove_session(
 ) -> bool {
     store.lock().unwrap().remove(session_id).is_some()
 }
+
+pub fn is_session(
+    session_id: String,
+    store: &SessionStore,
+) -> bool {
+    let store = store.lock().unwrap();
+
+    match store.get(&session_id).cloned() {
+        Some(s) => true,
+        None => false,
+    }
+}
