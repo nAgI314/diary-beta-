@@ -1,21 +1,11 @@
-import { useEffect, useState } from "react";
-import { fetchLoginStatus } from "../../utils/auth.ts";
 import { LoginButton } from "../login/Login";
 import styles from "./styles.module.css";
 
+interface Props {
+  loggedIn: boolean;
+}
 
-export const Header = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  useEffect(() => {
-    checkLoginStatus();
-  }, []);
-
-  const checkLoginStatus = async () => {
-    setLoggedIn(await fetchLoginStatus());
-    console.log("Login status checked:", loggedIn);
-  };
-
+export const Header = ({ loggedIn }: Props) => {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
@@ -32,10 +22,6 @@ export const Header = () => {
             <LoginButton />
           )}
         </div>
-
-        <button onClick={checkLoginStatus} style={{ display: "none" }}>
-          Check Login Status
-        </button>
       </div>
     </header>
   );
