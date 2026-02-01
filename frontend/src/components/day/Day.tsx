@@ -8,7 +8,7 @@ interface DayProps {
 }
 
 export const Day = (props: DayProps) => {
-  const hasDiary = Boolean(props.diaryDayData?.markdown?.html_url);
+  const hasDiary = Boolean(props.diaryDayData);
   return (
     <div
       className={`
@@ -18,7 +18,7 @@ export const Day = (props: DayProps) => {
       // onClick={()=>window.open(props.diaryDayData?.markdown?.html_url, '_blank') }
       onClick={
         hasDiary
-          ? () => window.open(props.diaryDayData!.markdown!.html_url, "_blank")
+          ? () => window.open(`https://github.com/nAgI314/diary/tree/main/${props.diaryDayData!.path}/main.md`, "_blank")
           : undefined
       }
     >
