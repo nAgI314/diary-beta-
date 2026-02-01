@@ -8,7 +8,7 @@ interface DayProps {
 }
 
 export const Day = (props: DayProps) => {
-  const hasDiary = Boolean(props.diaryDayData);
+  const hasDiary = Boolean(props.diaryDayData?.date);
   return (
     <div
       className={`
