@@ -9,6 +9,7 @@ mod session;
 
 use auth::{github_login::login, github_callback::callback};
 use session::SessionStore;
+use auth::me::me;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -34,6 +35,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_repo_contents)
             .service(login)
             .service(callback)
+            .service(me)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
