@@ -1,21 +1,21 @@
-export interface GithubContentItem {
-  name: string;
-  path: string;
-  sha: string;
-  size: number;
-  url: string;
-  html_url: string;
-  git_url: string;
-  download_url: string | null;
-  type: "file" | "dir";
-  _links: {
-    self: string;
-    git: string;
-    html: string;
-  };
-}
+// export interface GithubContentItem {
+//   name: string;
+//   path: string;
+//   sha: string;
+//   size: number;
+//   url: string;
+//   html_url: string;
+//   git_url: string;
+//   download_url: string | null;
+//   type: "file" | "dir";
+//   _links: {
+//     self: string;
+//     git: string;
+//     html: string;
+//   };
+// }
 
-export type GithubContentsResponse = GithubContentItem[];
+// export type GithubContentsResponse = GithubContentItem[];
 
 export interface DiaryIndex {
   version: number;
@@ -49,23 +49,23 @@ export interface DiaryIndex {
 //   return files;
 // };
 
-const getGithubDirectory = async (
-  path: string
-): Promise<GithubContentsResponse> => {
-  const response = await fetch(
-    `https://api.diary.minagiri.net/repo?owner=nAgI314&repo=diary&path=${path}`,
-    {
-      credentials: "include", // cookieを入れる設定
-    }
-  );
+// const getGithubDirectory = async (
+//   path: string
+// ): Promise<GithubContentsResponse> => {
+//   const response = await fetch(
+//     `https://api.diary.minagiri.net/repo?owner=nAgI314&repo=diary&path=${path}`,
+//     {
+//       credentials: "include", // cookieを入れる設定
+//     }
+//   );
 
-  if (!response.ok) {
-    throw new Error("directory fetch error");
-  }
+//   if (!response.ok) {
+//     throw new Error("directory fetch error");
+//   }
 
-  const data: GithubContentsResponse = await response.json();
-  return data;
-};
+//   const data: GithubContentsResponse = await response.json();
+//   return data;
+// };
 
 export const getDiaryIndex = async (): Promise<DiaryIndex> => {
   const response = await fetch(

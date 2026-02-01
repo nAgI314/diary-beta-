@@ -1,4 +1,4 @@
-import type { DiaryIndex, GithubContentItem } from "./diary/getdiary";
+import type { DiaryIndex } from "./diary/getdiary";
 
 export interface DiaryDay {
   date: string;  // "2025-12-04"
