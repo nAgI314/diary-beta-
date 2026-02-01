@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import { buildDiaryData, type DiaryData } from "../grouping";
-import { getGithubContent } from "../diary/getdiary";
+// import { buildDiaryData, type DiaryData } from "../grouping";
+// import { getGithubContent } from "../diary/getdiary";
 import { getDatesOfYear } from "./getAllDate";
 import { Month } from "../month/Month";
 import styles from "./styles.module.css";
+import { buildDiaryDataFromIndex, type DiaryData } from "../grouping";
+import { getDiaryIndex } from "../diary/getdiary";
 
 export const Calender = () => {
   const [groupedData, setGroupedData] = useState<DiaryData>();
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,8 +20,10 @@ export const Calender = () => {
         const mockData: DiaryData = await res.json();
         setGroupedData(mockData);
       } else {
-        const raw = await getGithubContent();
-        const grouped = buildDiaryData(raw);
+        // const raw = await getGithubContent();
+        // const grouped = buildDiaryData(raw);
+        const raw = await getDiaryIndex();
+        const grouped = await buildDiaryDataFromIndex(raw);
         setGroupedData(grouped);
       }
     };
@@ -56,8 +61,10 @@ export const Calender = () => {
       const mockData: DiaryData = await res.json();
       setGroupedData(mockData);
     } else {
-      const raw = await getGithubContent();
-      const grouped = buildDiaryData(raw);
+      // const raw = await getGithubContent();
+      // const grouped = buildDiaryData(raw);
+      const raw = await getDiaryIndex();
+      const grouped = await buildDiaryDataFromIndex(raw);
       setGroupedData(grouped);
     }
   };

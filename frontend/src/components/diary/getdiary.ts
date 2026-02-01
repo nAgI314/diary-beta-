@@ -17,31 +17,37 @@ export interface GithubContentItem {
 
 export type GithubContentsResponse = GithubContentItem[];
 
-export const getGithubContent = async (): Promise<GithubContentsResponse> => {
-  const alldata = await getAllFilesRecursive("primary");
-  // console.log(alldata);
-  return alldata;
-};
+export interface DiaryIndex {
+  version: number;
+  dates: string[]; // "YYYY-MM-DD"
+}
 
-const getAllFilesRecursive = async (
-  path: string
-): Promise<GithubContentItem[]> => {
-  const items = await getGithubDirectory(path);
-  //   console.log(items);
-  const files: GithubContentItem[] = [];
 
-  for (const item of items) {
-    // console.log(item)
-    if (item.type === "file") {
-      files.push(item);
-    } else if (item.type === "dir") {
-      const subFiles = await getAllFilesRecursive(item.path);
-      files.push(...subFiles);
-    }
-    // break;
-  }
-  return files;
-};
+// export const getGithubContent = async (): Promise<GithubContentsResponse> => {
+//   const alldata = await getAllFilesRecursive("primary");
+//   // console.log(alldata);
+//   return alldata;
+// };
+
+// const getAllFilesRecursive = async (
+//   path: string
+// ): Promise<GithubContentItem[]> => {
+//   const items = await getGithubDirectory(path);
+//   //   console.log(items);
+//   const files: GithubContentItem[] = [];
+
+//   for (const item of items) {
+//     // console.log(item)
+//     if (item.type === "file") {
+//       files.push(item);
+//     } else if (item.type === "dir") {
+//       const subFiles = await getAllFilesRecursive(item.path);
+//       files.push(...subFiles);
+//     }
+//     // break;
+//   }
+//   return files;
+// };
 
 const getGithubDirectory = async (
   path: string
@@ -59,4 +65,17 @@ const getGithubDirectory = async (
 
   const data: GithubContentsResponse = await response.json();
   return data;
+};
+
+export const getDiaryIndex = async (): Promise<DiaryIndex> => {
+  const response = await fetch(
+    "https://api.diary.minagiri.net/repo?owner=nAgI314&repo=diary&path=primary/index.json",
+    { credentials: "include" }
+  );
+
+  if (!response.ok) {
+    throw new Error("index fetch error");
+  }
+
+  return response.json();
 };
