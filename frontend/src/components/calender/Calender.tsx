@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getDatesOfYear } from "./getAllDate";
 import { Month } from "../month/Month";
 import styles from "./styles.module.css";
@@ -7,7 +7,7 @@ import { getDiaryIndex } from "../diary/getdiary";
 
 export const Calender = () => {
   const [groupedData, setGroupedData] = useState<DiaryData>();
-
+  const [visibleYears, setVisibleYears] = useState<number[]>([2026]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,17 +22,17 @@ export const Calender = () => {
         setGroupedData(grouped);
       }
     };
-    fetchData().then(() => {console.log(groupedData);});
+    fetchData();
   }, []);
 
   useEffect(() => {
-    if (!groupedData) return; // データがない場合は何もしない
+    if (!groupedData) return;
 
-    // DOMの描画完了を待つ
     setTimeout(() => {
       const today = new Date();
-      const month = today.getMonth(); // 0–11
-      const targetElement = document.getElementById(`month-${month}`);
+      const currentYear = today.getFullYear();
+      const month = today.getMonth();
+      const targetElement = month != 0 ? document.getElementById(`month-${currentYear}-${month-1}`) : document.getElementById(`month-${currentYear}-${month}`);
 
       if (targetElement) {
         targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -40,7 +40,6 @@ export const Calender = () => {
     }, 100);
   }, [groupedData]);
 
-  const allDate = getDatesOfYear(2026);
   const MONTHS = Array.from({ length: 12 }, (_, i) => i);
 
   const handleUpdateData = async () => {
@@ -55,25 +54,97 @@ export const Calender = () => {
       setGroupedData(grouped);
     }
   };
-  if (!groupedData) {
-    return (
-      <div className={styles.wrapper}>
-        <div>loading...</div>
-        <button onClick={handleUpdateData}>読み込み</button>
-      </div>
+
+  const topRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const isTop = entry.target === topRef.current;
+        const isBottom = entry.target === bottomRef.current;
+
+        if (!entry.isIntersecting) {return;}
+
+        if (isTop) {
+          setVisibleYears((prev) => {
+            const min = Math.min(...prev);
+            return prev.includes(min - 1) ? prev : [...prev, min - 1];
+          });
+        }
+
+        if (isBottom) {
+          setVisibleYears((prev) => {
+            const max = Math.max(...prev);
+            return prev.includes(max + 1) ? prev : [...prev, max + 1];
+          });
+        }
+      },
+      {
+        root: null,
+        rootMargin: "200px",
+        threshold: 0,
+      }
     );
-  }
+
+    if (topRef.current) {
+      observer.observe(topRef.current);
+    }
+    if (bottomRef.current) {
+      observer.observe(bottomRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   return (
     <div className={styles.wrapper}>
-      {MONTHS.map((i) => {
-        const monthKey = String(i + 1).padStart(2, "0");
-        return (
-        <Month
-          allDate={allDate}
-          month={i}
-          diaryMonthData={groupedData?.[2026]?.[monthKey]}
-        />
-      )})}
+      <div
+        ref={topRef}
+        style={{
+          height: 10,
+          top: 0,
+        }}
+      />
+      {!groupedData ?
+
+        <div className={styles.wrapper}>
+          <div>loading...</div>
+          <button onClick={handleUpdateData}>読み込み</button>
+        </div>
+
+      :<>
+      {visibleYears
+        .sort((a, b) => a - b)
+        .map((year) => {
+          const allDate = getDatesOfYear(year);
+
+          return (
+            <div key={year}>
+              <h1>{year}</h1>
+              {MONTHS.map((i) => {
+                const monthKey = String(i + 1).padStart(2, "0");
+                return (
+                  <Month
+                    key={`${year}-${i}`}
+                    allDate={allDate}
+                    month={i}
+                    year={year}
+                    diaryMonthData={groupedData?.[year]?.[monthKey]}
+                  />
+                );
+              })}
+            </div>
+          );
+        })}</>}
+      <div
+        ref={bottomRef}
+        style={{
+          height: 10,
+        }}
+      />
     </div>
   );
 };

@@ -7,6 +7,7 @@ import type { DiaryMonth } from "../grouping";
 interface MonthProps {
   allDate: Date[];
   month: number;
+  year: number;
   diaryMonthData?: DiaryMonth;
 }
 
@@ -21,7 +22,7 @@ export const Month = (props: MonthProps) => {
   // 空白マスを作る
   const blanks = Array.from({ length: startDay });
   return (
-    <div className={styles.month} id={`month-${props.month}`}>
+    <div className={styles.month} id={`month-${props.year}-${props.month}`}>
       {/* 月名 */}
       {/* <h3 className={styles.monthTitle}>{props.month + 1}月</h3> */}
       <h3 className={styles.monthTitle}>

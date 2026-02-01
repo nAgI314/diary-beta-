@@ -24,7 +24,6 @@ function App() {
       {loggedIn ? <Calender/> : <p>Not logged in</p>}
     {/* <Calender/> */}
     </main>
-      {/* <Diary/> */}
     </>
   )
 }
