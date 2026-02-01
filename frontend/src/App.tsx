@@ -22,7 +22,7 @@ function App() {
     {/* <LoginButton/> */}
     <main>
       {loggedIn ? <Calender/> : <p>Not logged in</p>}
-    <Calender/>
+    {/* <Calender/> */}
     </main>
       {/* <Diary/> */}
     </>
