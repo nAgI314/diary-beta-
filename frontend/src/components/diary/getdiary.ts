@@ -22,51 +22,6 @@ export interface DiaryIndex {
   dates: string[]; // "YYYY-MM-DD"
 }
 
-
-// export const getGithubContent = async (): Promise<GithubContentsResponse> => {
-//   const alldata = await getAllFilesRecursive("primary");
-//   // console.log(alldata);
-//   return alldata;
-// };
-
-// const getAllFilesRecursive = async (
-//   path: string
-// ): Promise<GithubContentItem[]> => {
-//   const items = await getGithubDirectory(path);
-//   //   console.log(items);
-//   const files: GithubContentItem[] = [];
-
-//   for (const item of items) {
-//     // console.log(item)
-//     if (item.type === "file") {
-//       files.push(item);
-//     } else if (item.type === "dir") {
-//       const subFiles = await getAllFilesRecursive(item.path);
-//       files.push(...subFiles);
-//     }
-//     // break;
-//   }
-//   return files;
-// };
-
-// const getGithubDirectory = async (
-//   path: string
-// ): Promise<GithubContentsResponse> => {
-//   const response = await fetch(
-//     `https://api.diary.minagiri.net/repo?owner=nAgI314&repo=diary&path=${path}`,
-//     {
-//       credentials: "include", // cookieを入れる設定
-//     }
-//   );
-
-//   if (!response.ok) {
-//     throw new Error("directory fetch error");
-//   }
-
-//   const data: GithubContentsResponse = await response.json();
-//   return data;
-// };
-
 export const getDiaryIndex = async (): Promise<DiaryIndex> => {
   const response = await fetch(
     "https://api.diary.minagiri.net/repo?owner=nAgI314&repo=diary&path=primary/index.json",
@@ -79,6 +34,6 @@ export const getDiaryIndex = async (): Promise<DiaryIndex> => {
   const data = await response.json();
   const decoded = atob(data.content); 
   const index: DiaryIndex = JSON.parse(decoded);
-  console.log(index);
+  // console.log(index);
   return index;
 };

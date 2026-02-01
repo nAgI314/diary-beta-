@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-// import { buildDiaryData, type DiaryData } from "../grouping";
-// import { getGithubContent } from "../diary/getdiary";
 import { getDatesOfYear } from "./getAllDate";
 import { Month } from "../month/Month";
 import styles from "./styles.module.css";
@@ -16,18 +14,15 @@ export const Calender = () => {
       if (import.meta.env.VITE_MODE === "test") {
         const res = await fetch("/diary-beta-/mock.json");
         if (!res.ok) throw new Error("mock fetch error");
-
-        const mockData: DiaryData = await res.json();
-        setGroupedData(mockData);
+        const grouped = await buildDiaryDataFromIndex(await res.json());
+        setGroupedData(grouped);
       } else {
-        // const raw = await getGithubContent();
-        // const grouped = buildDiaryData(raw);
         const raw = await getDiaryIndex();
         const grouped = await buildDiaryDataFromIndex(raw);
         setGroupedData(grouped);
       }
     };
-    fetchData();
+    fetchData().then(() => {console.log(groupedData);});
   }, []);
 
   useEffect(() => {
@@ -45,24 +40,16 @@ export const Calender = () => {
     }, 100);
   }, [groupedData]);
 
-  // console.log(groupedData);
-
-  // console.log(groupedData?.[2025]?.[12]);
   const allDate = getDatesOfYear(2026);
   const MONTHS = Array.from({ length: 12 }, (_, i) => i);
 
   const handleUpdateData = async () => {
-    // console.log(import.meta.env.VITE_MODE);
     if (import.meta.env.VITE_MODE === "test") {
-      
       const res = await fetch("/diary-beta-/mock.json");
       if (!res.ok) throw new Error("mock fetch error");
-
-      const mockData: DiaryData = await res.json();
-      setGroupedData(mockData);
+      const grouped = await buildDiaryDataFromIndex(await res.json());
+      setGroupedData(grouped);
     } else {
-      // const raw = await getGithubContent();
-      // const grouped = buildDiaryData(raw);
       const raw = await getDiaryIndex();
       const grouped = await buildDiaryDataFromIndex(raw);
       setGroupedData(grouped);
@@ -78,24 +65,15 @@ export const Calender = () => {
   }
   return (
     <div className={styles.wrapper}>
-      {MONTHS.map((i) => (
+      {MONTHS.map((i) => {
+        const monthKey = String(i + 1).padStart(2, "0");
+        return (
         <Month
           allDate={allDate}
           month={i}
-          diaryMonthData={groupedData?.[2026]?.[i + 1]}
+          diaryMonthData={groupedData?.[2026]?.[monthKey]}
         />
-      ))}
-      {/* {groupedData &&
-        Object.entries(groupedData).map(([year, months]) => (
-          <div>
-            <h1>{year}年</h1>
-            <div>
-              {Object.entries(months).map(([month, days]) => (
-                <div>{month}</div>
-              ))}
-            </div>
-          </div>
-        ))} */}
+      )})}
     </div>
   );
 };

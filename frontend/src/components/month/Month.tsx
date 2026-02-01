@@ -15,8 +15,6 @@ export const Month = (props: MonthProps) => {
     (date) => date.getMonth() === props.month
   );
 
-  // console.log("Month", props.month, props.diaryMonthData);
-
   // 月初の曜日（日=0）
   const startDay = getDay(monthData[0]);
 
