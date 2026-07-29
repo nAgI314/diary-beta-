@@ -1,0 +1,25 @@
+services:
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    networks:
+      - traefik-network
+    env_file:
+      - ./backend/.env
+    environment:
+      - FRONTEND_URL=${FRONTEND_URL:-https://localhost}
+      - GITHUB_CALLBACK_URL=https://${APP_DOMAIN:-localhost}/auth/github/callback
+      - PORT=8080
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`${APP_DOMAIN:-localhost}`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.backend.priority=100"
+      - "traefik.http.services.backend.loadbalancer.server.port=8080"
+      - "traefik.docker.network=${TRAEFIK_DOCKER_NETWORK:-traefik-network}"
+
+networks:
+  traefik-network:
+    name: ${TRAEFIK_DOCKER_NETWORK:-traefik-network}
+    external: true
