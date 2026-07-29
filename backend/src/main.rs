@@ -17,7 +17,9 @@ async fn main() -> std::io::Result<()> {
     dotenvy::dotenv().ok();
 
     let session_store = web::Data::new(SessionStore::new(HashMap::new()));
-    let frontend_url = env::var("FRONTEND_URL").unwrap_or_else(|_| "http://localhost:5173".to_string());
+    let frontend_origin = env::var("FRONTEND_ORIGIN")
+        .or_else(|_| env::var("FRONTEND_URL"))
+        .unwrap_or_else(|_| "http://localhost:5173".to_string());
     let port = env::var("PORT")
         .unwrap_or_else(|_| "8080".to_string())
         .parse::<u16>()
@@ -28,7 +30,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(session_store.clone())
             .wrap(
                 Cors::default()
-                    .allowed_origin(&frontend_url)
+                    .allowed_origin(&frontend_origin)
                     .allowed_methods(vec!["GET", "POST", "OPTIONS"])
                     .allowed_headers(vec![
                         http::header::CONTENT_TYPE,

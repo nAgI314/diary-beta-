@@ -58,15 +58,18 @@ pub async fn callback(
     // cookie 発行
     let cookie = Cookie::build("session_id", session_id)
         .http_only(true)
-        .same_site(SameSite::Lax)
+        .same_site(SameSite::None)
+        .secure(true)
         .path("/")
         .finish();
 
 
-    let frontend_url = std::env::var("FRONTEND_URL").unwrap_or_else(|_| "http://localhost:5173".to_string());
+    let redirect_url = std::env::var("FRONTEND_REDIRECT_URL")
+        .or_else(|_| std::env::var("FRONTEND_URL"))
+        .unwrap_or_else(|_| "http://localhost:5173".to_string());
 
     HttpResponse::Found()
-        .append_header(("Location", frontend_url))
+        .append_header(("Location", redirect_url))
         .cookie(cookie)
         .finish()
 }
