@@ -63,8 +63,10 @@ pub async fn callback(
         .finish();
 
 
+    let frontend_url = std::env::var("FRONTEND_URL").unwrap_or_else(|_| "http://localhost:5173".to_string());
+
     HttpResponse::Found()
-        .append_header(("Location", "http://localhost:5173"))
+        .append_header(("Location", frontend_url))
         .cookie(cookie)
         .finish()
 }

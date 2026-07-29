@@ -1,5 +1,6 @@
 export const LoginButton = () => {
+  const apiUrl = import.meta.env.VITE_API_URL || "https://api.diary.minagiri.net";
   return (
-    <a href="https://api.diary.minagiri.net/auth/github/login">Login with GitHub</a>
+    <a href={`${apiUrl}/auth/github/login`}>Login with GitHub</a>
   );
 };
